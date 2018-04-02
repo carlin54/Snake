@@ -17,15 +17,15 @@ class Walls {
 
 public:
 
-	const Node& Head()			const{ 	return (*pHead);	};
-	const unsigned& Length()	const{	return (mLength);	};
+	const Node* getHead()		const{ 	return (pHead);	};
+	const unsigned* getLength()	const{	return (&mLength);	};
 
 	Walls(vec2 top_left, vec2 bottom_right);
 	~Walls();
 
-	void Add(vec2 position, Renderable type);
-	bool Collides(const Element& e)const;
-	bool CollidesElements(const Node& n)const;
+	void add(vec2 position, Renderable type);
+	bool collides(const Element* e)const;
+	bool collidesElements(const Node* n)const;
 
 };
 

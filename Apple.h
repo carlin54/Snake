@@ -22,8 +22,8 @@ public:
 	Apple& operator=(const Element& newElement);
 	Apple& operator=(const Apple& newApple);
 
-	bool Collides(const Element& e)const;
-	bool CollidesElements(const Node& e)const;
+	bool collides(const Element &e)const;
+	bool collidesElements(const Node &e)const;
 
 };
 

@@ -13,7 +13,7 @@
 #include <cstddef>
 #include <assert.h>
 #include <cstdlib>
-#include <ncurses.h>
+#include <curses.h>
 #include <thread>
 #include <exception>
 #include <unistd.h>
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <functional>
 #include <vector>
+#include <math.h>
 
 class Apple;
 class Snake;
@@ -33,6 +34,8 @@ class Node;
 typedef unsigned counter;
 typedef float real;
 typedef Vector2 vec2;
+
+int magnitude(int x);
 
 enum class Renderable : chtype {
 	Empty		 		= ' ',
@@ -48,7 +51,8 @@ enum class Renderable : chtype {
 	WallTopLeft  		= '+',
 	WallTopRight 		= '+',
 	WallBottomLeft		= '+',
-	WallBottomRight		= '+'
+	WallBottomRight		= '+',
+	Path				= 'X',
 };
 
 class Direction {
@@ -125,18 +129,4 @@ public:
 class Discard : public std::exception {};
 
 
-template<class T> struct MultiNode {
-	MultiNode* pUp;
-	MultiNode* pDown;
-	MultiNode* pLeft;
-	MultiNode* pRight;
-	T value;
-	MultiNode(T value) :
-		pUp(nullptr),pDown(nullptr),
-		pLeft(nullptr),pRight(nullptr),
-		value(value){}
-	~MultiNode(){
-
-	}
-};
 #endif /* GLOBAL_H_ */

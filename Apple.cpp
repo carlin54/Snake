@@ -7,11 +7,11 @@
 
 #include "Apple.h"
 
-bool Apple::Collides(const Element& e)const{
+bool Apple::collides(const Element &e)const{
 	return (mPosition == e.mPosition);
 }
 
-bool Apple::CollidesElements(const Node& n)const{
+bool Apple::collidesElements(const Node &n)const{
 	const Node* pCurrent = &n;
 	while(pCurrent != nullptr){
 		if(mPosition == pCurrent->mPosition) return (true);
