@@ -25,10 +25,13 @@ void Game::initialize(){
 
     mSnake = new Snake(vec2(mWidth/2, mHeight/2), 1);
     mWalls = new Walls(vec2(0, mHeight-1), vec2(mWidth-1, 0));
-    mApple = new Apple(newApple());
+
 
 	mObstacles.push_back(mSnake->getHead());
 	mObstacles.push_back(mWalls->getHead());
+
+    mApple = new Apple(newApple());
+    generatePathToApple();
 
     //clear();
 	//refresh();
@@ -154,12 +157,42 @@ bool Game::isSafe(const vec2& position)const{
             mWalls->collides(&e) == false
 			);
 }
+void Game::generatePathToApple(){
+    if(mPathToApple != nullptr){
+        delete mPathToApple;
+        mPathToApple = nullptr;
+    }
 
+
+    vec2 start = mSnake->getHead()->mPosition;
+    vec2 end = mApple->mPosition;
+    mPathToApple = new Path(mObstacles, Renderable::PathApple);
+    bool check = mPathToApple->generatePath(start, end);
+    if(!check){
+        std::cout << "NO PATH FOUND!" << std::endl;
+    }
+}
 void Game::run(){
 
 	assert(mState == State::Running);
 	// clear screen
 	clearBuffer(0, 0, mWidth, mHeight, Renderable::Empty);
+
+    if(mAI){
+        if(mPathToApple->hasPath()){
+            mInputDirection = mPathToApple->getDirection();
+            mPathToApple->pop();
+        }
+
+
+        /*if(mPathToTail != nullptr){
+            vec2 start = mSnake->getHead()->mPosition;
+            vec2 end = mSnake->getTail()->mPosition;
+
+            mPathToTail = new Path(obstacles, Renderable::PathTail);
+            mPathToTail->generatePath(start, end);
+        }*/
+    }
 
 	// physics
     mSnake->step(mInputDirection);
@@ -168,6 +201,7 @@ void Game::run(){
 	if(mSnake->collidesWith(mApple)) {
         mSnake->eatApple();
         *mApple = newApple();
+        generatePathToApple();
     }
 
 	if(mSnake->convexes()) {
@@ -178,26 +212,16 @@ void Game::run(){
         mState = State::Lost;
     }
 
-    if(mAI){
-        if(mPathToApple != nullptr){
-            vec2 start = mSnake->getHead()->mPosition;
-            vec2 end = mApple->mPosition;
 
-
-            std::vector<const Node*> obstacles = {mWalls->getHead(), mSnake->getHead()};
-            mPathToApple = new Path(obstacles);
-            mPathToApple->generatePath(start, end);
-
-        }
-    }
 
 	// push elements
 
     writeElementToBuffer(mPathToApple->getHead(), Vertex, Fragment);
-
     writeElementToBuffer(mWalls->getHead(), Vertex, Fragment);
 	writeElementToBuffer(mSnake->getHead(), Vertex, Fragment);
 	writeToBuffer(mApple, Vertex, Fragment);
+
+
 
 	//writeElementToBuffer(mDirectPath->getHead(), 		Vertex, Fragment);
 	//writeElementToBuffer(mCollisionPath->getHead(), 	Vertex, Fragment);
@@ -237,7 +261,9 @@ Game::Game(unsigned x, unsigned y, unsigned width, unsigned height, unsigned ref
 	mThreadLoop(nullptr),
 	mExitLoop(false),
     mInputDirection(Direction::RIGHT),
-    mAI(ai)
+    mAI(ai),
+    mPathToApple(nullptr),
+    mPathToTail(nullptr)
 {
 
     //mWindow = initscr();
@@ -289,13 +315,21 @@ void Game::sleep(){
 }
 Apple Game::newApple(){
 	assert(hasSpaceForApple());
-	Apple e(vec2(5, 5));
-    return e;
-	while(true){
-		e.mPosition.x = rand() % mWidth		-	1;
-		e.mPosition.y = rand() % mHeight	-	1;
-		if((!mSnake->collidesWith(&e)) && (!mWalls->collides(&e))) return (e);
-	}
+	Apple e(vec2(0,0));
+    std::vector<vec2> possible_spawn_locations;
+
+    for(int i = 0; i < mWidth; i++){
+        for(int j = 0; j < mHeight; j++){
+            e.mPosition = vec2(i,j);
+            if(!mSnake->collidesWith(&e) && (!mWalls->collides(&e))){
+                possible_spawn_locations.emplace_back(vec2(i,j));
+            }
+        }
+    }
+    long unsigned int size = possible_spawn_locations.size();
+    int loc_index = rand() % possible_spawn_locations.size();
+    e.mPosition = possible_spawn_locations[loc_index];
+    std::cout << "new position " << e.mPosition.x << " " << e.mPosition.y << endl;
 	return (e);
 }
 void Game::clip(const Element* e)const throw(Discard){

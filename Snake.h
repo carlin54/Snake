@@ -22,7 +22,13 @@ public:
 	inline const Node* 		getHead()			const{ 	return (pHead); 		};
 	inline const unsigned* 	getLength()			const{ 	return (&mLength); 		};
 	inline const Direction* getStepDirection()	const{ 	return (&mDirection); 	};
-
+    inline const Node*      getTail()           const{
+        const Node* pCurrent = this->getHead();
+        while(pCurrent->pNext != nullptr){
+            pCurrent = pCurrent->pNext;
+        }
+        return pCurrent;
+    }
 	void step(const Direction &DIR);
 
 	void eatApple();

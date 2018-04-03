@@ -39,12 +39,12 @@ int magnitude(int x);
 
 enum class Renderable : chtype {
 	Empty		 		= ' ',
-	Apple		 		= '0',
-	SnakeHead	 		= 'O',
-	SnakeBody	 		= '^',
-	SnakeTail	 		= '~',
-	SnakeAppleHead	 	= 'o',
-	SnakeAppleBody		= 'o',
+	Apple		 		= 'a',
+	SnakeHead	 		= 'H',
+	SnakeBody	 		= 'B',
+	SnakeTail	 		= 'T',
+	SnakeAppleHead	 	= 'A',
+	SnakeAppleBody		= 'A',
 	SnakeAppleTail		= 'o',
 	WallHorizontal  	= '-',
 	WallVertical  		= '|',
@@ -52,7 +52,8 @@ enum class Renderable : chtype {
 	WallTopRight 		= '+',
 	WallBottomLeft		= '+',
 	WallBottomRight		= '+',
-	Path				= 'X',
+	PathApple			= '+',
+    PathTail            = 'T'
 };
 
 class Direction {
@@ -123,6 +124,10 @@ public:
 
 	inline Node(vec2 position, Renderable type, Node* pNext = nullptr):
 		Element(position, type), pNext(pNext){};
+
+    inline ~Node(){
+
+    }
 
 };
 

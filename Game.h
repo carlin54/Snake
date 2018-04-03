@@ -62,6 +62,7 @@ private:
 	Apple newApple();
 	bool hasSpaceForApple();
 	bool canSnakeFit();
+    void generatePathToApple();
 
 	void drawBuffer();
 	void clearBuffer(unsigned startx, unsigned starty, unsigned endx, unsigned endy,

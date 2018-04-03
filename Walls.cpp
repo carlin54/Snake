@@ -52,7 +52,7 @@ bool Walls::collides(const Element *e)const{
 	}
 	return (false);
 }
-bool Walls::collidesElements(const Node* n)const{
+bool Walls::collidesElements(const Node *n)const{
 	const Node* pCurrentWallElement = pHead;
 	const Node* pCurrentElement;
 	while(pCurrentWallElement != nullptr){

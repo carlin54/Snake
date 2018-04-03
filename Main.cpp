@@ -13,7 +13,7 @@ int main() {
     int x = 0;
     int y = 0;
     int width = 25;
-    int height = 25;
+    int height = 10;
     int step = 500;
 
 	Game game(x, y, width, height, step, true);
